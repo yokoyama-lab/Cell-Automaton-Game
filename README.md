@@ -1,1 +1,1 @@
-# Cell-Automaton-Game
+# 試作品とかとか
