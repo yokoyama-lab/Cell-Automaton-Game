@@ -14,7 +14,7 @@ public final class Const {
 	
 	//セルの大きさ(正方形一辺の長さ)
 	//セルサイズはフレームサイズの縦幅及び横幅の約数となっている必要がある
-	public final static int CELL_SIZE = 20;
+	public final static int CELL_SIZE = 50;
 	
 	//無限ループ内でのスリープ時間 ( ex. 値を小さくするほど更新速度が上がる)
 	public final static long SLEEP_TIME_MS = 800;

@@ -131,8 +131,9 @@ public class GameFrame extends JFrame implements Runnable{
 				int dx_min = -2;
 				int dy_min = -2;
 				int dx_max = 2;
-				int dy_max = 2;				
-				//yが一番上
+				int dy_max = 2;	
+				/*
+                                //yが一番上
 				if(y == 0){ dy_min = 0; }
 				//xが一番左
 				if(x == 0){ dx_min = 0; }
@@ -140,13 +141,16 @@ public class GameFrame extends JFrame implements Runnable{
 				if(y == v_cell_cnt - 1){ dy_max = 0; }
 				//xが一番右
 				if(x == h_cell_cnt - 1){ dx_max = 0; }
-				
+				*/
 				for(int dx = dx_min; dx <= dx_max;dx++){
 					for(int dy = dy_min; dy <= dy_max;dy++){
-                                            if((!(dx == 0 && dy == 0))||(Math.abs(dx) + Math.abs(dy) <= 2)){
-							cell.addSurroundings2(cell_matrix[y+dy][x+dx]);
-						}
-					}					
+                                            if(((!(dx == 0 && dy == 0)) && ((Math.abs(dx) + Math.abs(dy)) <= 2)) &&
+                                               ((0 <= y + dy && y + dy <= v_cell_cnt - 1) && (0 <= x + dx && x + dx <= h_cell_cnt - 1))){
+                                                cell.addSurroundings2(cell_matrix[y+dy][x+dx] , dy+2, dx+2,1);
+                                            }else{
+                                                cell.addSurroundings2(cell_matrix[0][0] , dy+2, dx+2,-1);
+                                            }		
+                                        }			
 				}
 			}			
 		}
@@ -160,13 +164,13 @@ public class GameFrame extends JFrame implements Runnable{
 				int dx_max = 1;
 				int dy_max = 0;				
 				//yが一番上
-				if(y == 1){ dy_min = 0; }
+				if(y <= 1){ dy_min = 0; }
 				//xが一番左
-				if(x == 1){ dx_min = 0; }
+				if(x <= 1){ dx_min = 0; }
 				//yが一番下
-				if(y == v_cell_cnt - 2){ dy_max = 0; }
+				if(y >= v_cell_cnt - 2){ dy_max = 0; }
 				//xが一番右
-				if(x == h_cell_cnt - 2){ dx_max = 0; }
+				if(x >= h_cell_cnt - 2){ dx_max = 0; }
 				
 				for(int dx = dx_min; dx <= dx_max;dx++){
 					for(int dy = dy_min; dy <= dy_max;dy++){
