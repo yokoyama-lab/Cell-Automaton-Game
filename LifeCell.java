@@ -23,6 +23,8 @@ class LifeCell extends JButton{
 	public LifeCell(){
 		super("");
 		surroundings = new ArrayList<LifeCell>();
+                surroundings2 = new ArrayList<LifeCell>();
+                surroundings3 = new ArrayList<LifeCell>();
 		setLayout();
 	}
 
@@ -30,6 +32,8 @@ class LifeCell extends JButton{
 		super("");
 		this.setBounds(rect);
 		surroundings = new ArrayList<LifeCell>();
+                surroundings2 = new ArrayList<LifeCell>();
+                surroundings3 = new ArrayList<LifeCell>();
 		setLayout();
 	}
 	/**
@@ -60,9 +64,19 @@ class LifeCell extends JButton{
 	 * 周囲のセルを追加
 	 * @param cell:LifeCell
 	 */
+        //(8近傍)
 	public void addSurroundings(LifeCell cell){
 		surroundings.add(cell);
 	}
+        //(12近傍)
+        public void addSurroundings2(LifeCell cell){
+		surroundings2.add(cell);
+	}
+        //(回転用近傍)
+        public void addSurroundings3(LifeCell cell){
+		surroundings3.add(cell);
+	}
+    
 	/**
 	 * 世代交代を行う
 	 */
@@ -87,7 +101,7 @@ class LifeCell extends JButton{
 		if(!isLiving){
 			//生きているセルが3つ
 			if(cnt == Const.BIRTH_CNT){
-				this.willLiving = true;
+                            this.willLiving = true;
 			}
 			return;
 		}
