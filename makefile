@@ -1,27 +1,32 @@
-# Makefile for java Frametest
 
-PACKAGE = Frametest
-SRCS    = $(PACKAGE).java
-OBJS    = $(SRCS:.java=.o)
+#makefile
 
-FILES   = README Makefile $(SRCS)
-VER     = 'date +%Y%m%d'
+JCC = javac
+JFLAGS = -g
 
-TARGET  =Frametest
-
-#java (*.java)
-javac   
+default: CellPattern.class Const.class GameFrame.class LifeCell.class LifeGame.class Range.class  
 
 
 
+CellPattern.class: CellPattern.java
+	      $(JCC) $(JFLAGS) CellPattern.java
 
-all:	$(PACKAGE).class
-	java $(PACKAGE)
-run:	$(PACKAGE).class
-	appletviewer $(PACKAGE).html
-clean:	
-	-rm *.class
-.eucjava.java:
-	native2ascii -encoding EUCJIS $*.eucjava $*.java
-.java.class:
-	javac -deprecation $<
+Const.class: Const.java
+	      $(JCC) $(JFLAGS) Const.java
+
+GameFrame.class: GameFrame.java
+	      $(JCC) $(JFLAGS) GameFrame.java
+
+LifeCell.class: LifeCell.java
+	      $(JCC) $(JFLAGS) LifeCell.java
+
+LifeGame.class: LifeGame.java
+	      $(JCC) $(JFLAGS) LifeGame.java
+
+Range.class: Range.java
+	      $(JCC) $(JFLAGS) Range.java
+
+
+clean: 
+	$(RM) *.class
+
