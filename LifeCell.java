@@ -49,8 +49,8 @@ class LifeCell extends JButton{
 						public void actionPerformed(ActionEvent event){
 							if(button.isLiving==1){
 								button.forceKill();
-							}else{
-								button.forceSpawn();
+							}else if(button.isLiving==2){
+                                                            button.forceKill1();}else if(button.isLiving==3){button.forceKill2();}else{								button.forceSpawn();
 							}
 						}
 					}
@@ -136,6 +136,18 @@ int cntall =0;
 	public void forceKill(){
 		isLiving = 2;
 		this.setBackground(Color.red);
+	}
+        public void forceKill1(){
+		isLiving = 3;
+		this.setBackground(Color.green);
+	}
+        public void forceKill2(){
+		isLiving = 4;
+		this.setBackground(Color.blue);
+	}
+        public void forceKill3(){
+		isLiving = 0;
+		this.setBackground(Color.white);
 	}
 	/**
 	 * 盤面初期化用

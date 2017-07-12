@@ -70,6 +70,12 @@ public class GameFrame extends JFrame implements Runnable{
 		p.setBounds(0,0, width + h_cell_cnt, height + v_cell_cnt);
 		p.setBackground(Color.black);
 
+		//端用パネルの生成
+		JPanel s = new JPanel();
+		p.setLayout(null);
+		p.setBounds(0,0, width + h_cell_cnt, height + v_cell_cnt);
+		p.setBackground(Color.black);
+
 		//ツールパネルの生成
 		JPanel toolPanel = new JPanel();
 		toolPanel.setLayout(null);
