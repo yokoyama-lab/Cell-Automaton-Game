@@ -17,12 +17,27 @@ class LifeCell extends JButton{
 	private int isLiving = 0;
 	//世代更新後の生存フラグ
 	private int willLiving = 0;
+        private LifeCell surroundings2[][] = {
+            {null,null,null,null,null},
+            {null,null,null,null,null},
+            {null,null,null,null,null},
+            {null,null,null,null,null},
+            {null,null,null,null,null}
+        };
+        private ArrayList<LifeCell> surroundings3;
 	/**
 	 * Constructors
 	 */
 	public LifeCell(){
 		super("");
 		surroundings = new ArrayList<LifeCell>();
+                surroundings2 = new LifeCell[5][5];
+                /*for (int i = 0; i < 5; i++) {
+                    for (int s = 0; s < 5; s++){
+                        surroundings2[i][s] = 0;
+                    }
+                }*/
+                surroundings3 = new ArrayList<LifeCell>();
 		setLayout();
 	}
 
@@ -30,6 +45,14 @@ class LifeCell extends JButton{
 		super("");
 		this.setBounds(rect);
 		surroundings = new ArrayList<LifeCell>();
+                //surroundings2 = new ArrayList<LifeCell>();
+                surroundings2 = new LifeCell[5][5];
+                /*for (int i = 0; i < 5; i++) {
+                    for (int s = 0; s < 5; s++){
+                        surroundings2[i][s] = 0;
+                    }
+                    }*/
+                surroundings3 = new ArrayList<LifeCell>();
 		setLayout();
 	}
 	/**
@@ -47,7 +70,7 @@ class LifeCell extends JButton{
 		this.addActionListener(
 				new ActionListener(){
 						public void actionPerformed(ActionEvent event){
-							if(button.isLiving==1){
+ 							if(button.isLiving==1){
 								button.forceKill();
 							}else if(button.isLiving==2){
                                                             button.forceKill1();}else if(button.isLiving==3){button.forceKill2();}else{								button.forceSpawn();
@@ -60,9 +83,29 @@ class LifeCell extends JButton{
 	 * 周囲のセルを追加
 	 * @param cell:LifeCell
 	 */
+        //(8近傍)
 	public void addSurroundings(LifeCell cell){
 		surroundings.add(cell);
 	}
+        //(12近傍)
+        public void addSurroundings2(LifeCell cell, int y, int x, int flag){
+            if(flag == 1){    
+                surroundings2[y][x] = cell;
+            }else{
+                surroundings2[y][x] = cell;
+                surroundings2[y][x].isLiving = 0;
+            }
+	}
+        //(回転用近傍)
+        public void addSurroundings3(LifeCell cell){
+		surroundings3.add(cell);
+	}
+        //privateのisLivingの取得
+        /*
+        public int getisLiving(){
+            return isLiving;
+        }
+        */
 	/**
 	 * 世代交代を行う
 	 */
@@ -72,33 +115,29 @@ class LifeCell extends JButton{
 		if(isLiving == 1){
 			setBackground(Color.yellow);
                 }
-                      else  if(isLiving == 2){
-                            setBackground(Color.red);
-                        }
-
-                      else  if(isLiving == 3){
-                            setBackground(Color.green);
-                        }
-                        
-                      else  if(isLiving == 4){
-                            setBackground(Color.blue);
-                        }
-
-
-else{
-                            setBackground(Color.white);			
-                        }
+                else  if(isLiving == 2){
+                    setBackground(Color.red);
                 }
+
+                else  if(isLiving == 3){
+                    setBackground(Color.green);
+                }
+                
+                else  if(isLiving == 4){
+                    setBackground(Color.blue);
+                }
+
+                else{
+                    setBackground(Color.white);			
+                }
+        }
 	/**
 	 * 周りのセルを調べて、世代交代の準備
 	 */
 	public void checkSurroundings(){
-		int cnt = 0;
-int cnt1 = 0;
-int cnt2 = 0;
-int cnt3 = 0;
-int cnt4 = 0;
-int cntall =0;
+                int cnt = 0, cnt1 = 0, cnt2 = 0, cnt3 = 0, cnt4 = 0, cnt5 = 0;
+                int cntall = 0;
+                
 		for(LifeCell cell : surroundings){
 			if(cell.isLiving == 1) cnt1++;
                         if(cell.isLiving == 2) cnt2++;
@@ -118,8 +157,43 @@ int cntall =0;
                         
 			return;
                        
-		}
- else this.willLiving = isLiving; 
+		} else {
+                    cnt = 0;
+                    if(isLiving == surroundings2[1][2].isLiving) {
+                        cnt++;
+                    }
+                    if(isLiving == surroundings2[2][3].isLiving) {
+                        cnt++;
+                    }
+                    if(isLiving == surroundings2[2][1].isLiving) {
+                        cnt++;
+                    }
+                    if(isLiving == surroundings2[3][2].isLiving) {
+                        cnt++;
+                    }
+
+                    if(cnt >= 2) {
+                        this.willLiving = 0;
+                    }else if(cnt == 1){
+                        if(isLiving == surroundings2[2-1][2].isLiving && 
+                           ((surroundings2[2-1][2-1].isLiving == isLiving || surroundings2[2-2][2].isLiving == isLiving) || surroundings2[2-1][2+1].isLiving == isLiving))
+                            this.willLiving = 0; 
+                        else if(isLiving == surroundings2[2][2-1].isLiving && 
+                           ((surroundings2[2-1][2-1].isLiving == isLiving || surroundings2[2][2-2].isLiving == isLiving) || surroundings2[2+1][2-1].isLiving == isLiving))
+                            this.willLiving = 0; 
+                        else if(isLiving == surroundings2[2][2+1].isLiving &&
+                           ((surroundings2[2-1][2+1].isLiving == isLiving || surroundings2[2][2+2].isLiving == isLiving) || surroundings2[2+1][2+1].isLiving == isLiving))
+                            this.willLiving = 0;
+                        else if(isLiving == surroundings2[2+1][2].isLiving &&
+                           ((surroundings2[2+1][2-1].isLiving == isLiving || surroundings2[2+1][2+1].isLiving == isLiving) || surroundings2[2+2][2].isLiving == isLiving) )
+                            this.willLiving = 0;
+                        else this.willLiving = isLiving;
+                    }else{
+                        //生存
+                        this.willLiving = isLiving; 
+                    }
+                    return;
+                }
         }
 	
 	/**
