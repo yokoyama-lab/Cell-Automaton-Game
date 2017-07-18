@@ -198,9 +198,9 @@ public class GameFrame extends JFrame implements Runnable{
                             running = !running;
 				JButton btn = (JButton)event.getSource();
 				if(running){
-					btn.setText("Stop");
+					btn.setText("ストップ");
 				}else{
-					btn.setText("Run");								
+					btn.setText("スタート");								
 				}
 			}
 		};
@@ -229,21 +229,25 @@ public class GameFrame extends JFrame implements Runnable{
 			}
 		};
                 //1コマ送りにしたい
+
 		ActionListener Run1BtnAction = new ActionListener(){
 			public void actionPerformed(ActionEvent event){
-                            run1 = 1; 
+				//動作状態を切り替え
+                            running = !running;
 				JButton btn = (JButton)event.getSource();
-						
+				
+					btn.setText("一時実行");
+				
 				
 			}
 		};
 		
 		//格納順を保持したいため、LinkedHashMapを使用
 		LinkedHashMap<String,ActionListener> btnSources = new LinkedHashMap<String,ActionListener>();
-		btnSources.put("Run", RunBtnAction);
-		btnSources.put("Clear", ClearBtnAction);
+		btnSources.put("スタート", RunBtnAction);
+		btnSources.put("リセット", ClearBtnAction);
 		//1コマ送りにしたい
-		btnSources.put("Run1", Run1BtnAction);
+		btnSources.put("一時実行", Run1BtnAction);
 		btnSources.put("グライダー", generateGliderBtnAction);
 		btnSources.put("宇宙船", generateSpaceShipBtnAction);
 		btnSources.put("銀河", generateGalaxyBtnAction);
