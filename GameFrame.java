@@ -197,11 +197,9 @@ public class GameFrame extends JFrame implements Runnable{
 				//動作状態を切り替え
                             running = !running;
 				JButton btn = (JButton)event.getSource();
-				if(running){
-					btn.setText("Stop");
-				}else{
+			
 					btn.setText("Run");								
-				}
+				
 			}
 		};
 		ActionListener ClearBtnAction = new ActionListener(){
@@ -283,7 +281,8 @@ public class GameFrame extends JFrame implements Runnable{
 			for(LifeCell cell : cells){
 				//世代交代(セルの塗り替え)
 				cell.generationalChange();
-			}
+                                
+			}running=!running;
 		}
 	}
 }
