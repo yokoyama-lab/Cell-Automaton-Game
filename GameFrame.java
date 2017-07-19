@@ -85,7 +85,8 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 		tlPanel.setBounds(0, p.getBounds().height+toolPanel.getBounds().height, p.getBounds().width, 30);
 
 		tlPanel.setOpaque(true);
-		tlPanel.setBackground(Color.black);		
+		tlPanel.setBackground(Color.black);
+                tlPanel.setForeground(Color.green);		
 		//パネルへのボタン追加
 		addButtonsOnPanel(toolPanel);
 		
@@ -287,6 +288,7 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 			
 			JButton button = new JButton(btnSrc.getKey());
 			button.setBackground(Color.black);
+                        button.setForeground(Color.blue);
 			button.setBounds(10 + i * 80,panel.getBounds().y, 80, 50);
 			button.addActionListener(btnSrc.getValue());
 			panel.add(button);						
