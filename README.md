@@ -1,4 +1,4 @@
-# ライフゲーム
+# Cell-Automaton-Game
 
 MainPrograme \
    ・CellPattern.java (CAの例、無くていいかも)\
@@ -8,6 +8,7 @@ MainPrograme \
    ・LifeGame.java    (メインクラス)\
    ・Range.java       ()
 
+起動準備
 　　　　　◯makeコマンドでコンパイル
      　　◯java LifeGame で実行
 
