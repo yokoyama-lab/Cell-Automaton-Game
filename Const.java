@@ -17,7 +17,8 @@ public final class Const {
 	public final static int CELL_SIZE = 36;
 	
 	//無限ループ内でのスリープ時間 ( ex. 値を小さくするほど更新速度が上がる)
-	public final static long SLEEP_TIME_MS = 80;
+
+	public final static long SLEEP_TIME_MS = 1000;
 	
 	//セルが生存するために必要な周辺セル数の範囲
 	public final static Range<Integer> LIVING_RANGE = new Range<Integer>(2,3);
