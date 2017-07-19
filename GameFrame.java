@@ -16,9 +16,10 @@ import javax.swing.JPanel;
  * ライフゲーム用のFrameクラス
  * @author Atsuya Sato
  */
-public class GameFrame extends JFrame implements Runnable{
+public class GameFrame extends JFrame implements Runnable, Mycallback{
 	private int width;
 	private int height;
+        private int cellSize;
 	private boolean running = false;
         private int run1 = 0;
 	//盤面に配置されたセルの配列
@@ -46,7 +47,8 @@ public class GameFrame extends JFrame implements Runnable{
 	 * @throws Exception 
 	 * @throws cellSizeがFrameSizeに合わない場合 
 	 */
-	public void setCells(int cellSize) throws Exception {	
+	public void setCells(int cellSize) throws Exception {
+                this.cellSize = cellSize;
 		if((width % cellSize != 0) || (width < cellSize)){
 			throw new Exception("セルのサイズがフレームの幅に合っていないか、セルサイズがフレームの幅より大きいです。");
 		}
@@ -89,8 +91,9 @@ public class GameFrame extends JFrame implements Runnable{
 		//セルの生成
 		for(int y = 0; y < v_cell_cnt; y ++){
 			for(int x = 0; x < h_cell_cnt; x++){
-				LifeCell cell = new LifeCell(new Rectangle(x * (cellSize + 1),y * (cellSize + 1),cellSize,cellSize));
-			    p.add(cell);
+                            LifeCell cell = new LifeCell(new Rectangle(x * (cellSize + 1), y * (cellSize + 1), cellSize, cellSize), x, y);
+			    cell.setCallback(this);
+                            p.add(cell);
 			    cell_matrix[y][x] = cell;
 			    cells.add(cell);
 			}			
@@ -181,12 +184,31 @@ public class GameFrame extends JFrame implements Runnable{
 				}
 			}			
 		}
-
+                
+                
 		Container contentPane = getContentPane();
 		contentPane.add(p);
 		contentPane.add(toolPanel);
-	}
 	
+        }
+        //セルの回転
+        public void spinCells(int x, int y){
+            //縦の総セル数
+            int v_cell_cnt = height / cellSize; 
+            //横の総セル数
+            int h_cell_cnt = width / cellSize;
+            if((x != 0 && y != 0) && (x < h_cell_cnt - 2 && y < v_cell_cnt - 2)){
+                int temp = cell_matrix[y][x].isLiving;
+                cell_matrix[y][x].isLiving = cell_matrix[y + 1][x].isLiving;
+                cell_matrix[y + 1][x].isLiving = cell_matrix[y + 1][x + 1].isLiving;
+                cell_matrix[y + 1][x + 1].isLiving = cell_matrix[y][x + 1].isLiving;
+                cell_matrix[y][x + 1].isLiving = temp;
+                cell_matrix[y][x].forceSpawn();
+                cell_matrix[y + 1][x].forceSpawn();
+                cell_matrix[y][x + 1].forceSpawn();
+                cell_matrix[y + 1][x + 1].forceSpawn();
+            }
+        }   
 	/**
 	 * ツールパネルへのボタン追加 
 	 */
