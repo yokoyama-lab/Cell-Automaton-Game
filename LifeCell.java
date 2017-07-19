@@ -28,7 +28,7 @@ class LifeCell extends JButton{
             {null,null,null,null,null}
         };
         private ArrayList<LifeCell> surroundings3;
-	/**
+        /**
 	 * Constructors
 	 */
 	public LifeCell(){
@@ -156,12 +156,15 @@ class LifeCell extends JButton{
         }
 	/**
 	 * 周りのセルを調べて、世代交代の準備
-	 */
-        
-
+    public class Score extends checkSurroundings{
+        private int s = 0;
+      return  s+=1;
+    }
+        */
 	public int checkSurroundings(){
                 int cnt = 0, cnt1 = 0, cnt2 = 0, cnt3 = 0, cnt4 = 0, cnt5 = 0;
                 int cntall = 0; int score = 0;
+
                 
 		for(LifeCell cell : surroundings){
 			if(cell.isLiving == 1) cnt1++;
@@ -216,6 +219,7 @@ class LifeCell extends JButton{
                         else if(isLiving == surroundings2[2+1][2].isLiving &&
                            ((surroundings2[2+1][2-1].isLiving == isLiving || surroundings2[2+1][2+1].isLiving == isLiving) || surroundings2[2+2][2].isLiving == isLiving) )
                             { this.willLiving = 0;
+
                                 score+=1;}
                         else this.willLiving = isLiving;
                     }else{
@@ -285,7 +289,8 @@ class LifeCell extends JButton{
 		for(LifeCell cell : cells){
 			cell.isLiving = 0;
 			cell.willLiving = 0;
-			cell.setBackground(Color.white);			
+			cell.setBackground(Color.white);
+			
 		}
 	}
 }
