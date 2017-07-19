@@ -84,7 +84,7 @@ public class GameFrame extends JFrame implements Runnable{
 		toolPanel.setBounds(0, p.getBounds().height, p.getBounds().width, 100);
 		toolPanel.setBackground(Color.white);
 
-		tlPanel.setText(""+this.score);
+		tlPanel.setText("スコア　"+this.score);
 		tlPanel.setBounds(0, p.getBounds().height+toolPanel.getBounds().height, p.getBounds().width, 30);
         this.h_t = p.getBounds().height+toolPanel.getBounds().height;
         this.w_t = p.getBounds().width;
@@ -224,6 +224,7 @@ public class GameFrame extends JFrame implements Runnable{
 			public void actionPerformed(ActionEvent event){
 				//盤面全てを初期化
 				LifeCell.forceKillAll(cells);
+                                score = 0;
 			}
 		};
 		ActionListener generateGliderBtnAction = new ActionListener(){
@@ -308,7 +309,7 @@ public class GameFrame extends JFrame implements Runnable{
 				//世代交代(セルの塗り替え)
 				cell.generationalChange();
                 /* ここでスコアの表示を更新しなければならない */
-		        tlPanel.setText(""+this.score);
+		        tlPanel.setText("スコア　"+this.score);
 			}
 		}
 	}

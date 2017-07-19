@@ -25,7 +25,7 @@ class LifeCell extends JButton{
             {null,null,null,null,null}
         };
         private ArrayList<LifeCell> surroundings3;
-	/**
+        /**
 	 * Constructors
 	 */
 	public LifeCell(){
@@ -241,7 +241,8 @@ class LifeCell extends JButton{
 		for(LifeCell cell : cells){
 			cell.isLiving = 0;
 			cell.willLiving = 0;
-			cell.setBackground(Color.white);			
+			cell.setBackground(Color.white);
+			
 		}
 	}
 }
