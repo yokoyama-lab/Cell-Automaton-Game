@@ -3,6 +3,7 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.JButton;
 
@@ -40,7 +41,6 @@ class LifeCell extends JButton{
                 surroundings3 = new ArrayList<LifeCell>();
 		setLayout();
 	}
-
 	public LifeCell(Rectangle rect) {
 		super("");
 		this.setBounds(rect);
@@ -128,12 +128,25 @@ class LifeCell extends JButton{
                 }
 
                 else{
-                    setBackground(Color.white);			
+                    setBackground(Color.white);
                 }
+
+        }
+	/**
+	 * 外周の上書き
+	 */
+        public void outsideChange(){
+                Random rnd = new Random();
+		willLiving = rnd.nextInt(4) + 1;
+        }
+        public void outsideClear(){
+		willLiving = 0;
         }
 	/**
 	 * 周りのセルを調べて、世代交代の準備
 	 */
+        
+
 	public void checkSurroundings(){
                 int cnt = 0, cnt1 = 0, cnt2 = 0, cnt3 = 0, cnt4 = 0, cnt5 = 0;
                 int cntall = 0;

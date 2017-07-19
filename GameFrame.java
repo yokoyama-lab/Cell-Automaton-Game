@@ -280,10 +280,23 @@ public class GameFrame extends JFrame implements Runnable{
 				//周囲のセルの状況を確認
 				cell.checkSurroundings();
 			}
+                        int cntTest = 0;
+                        
+                        for(LifeCell cell : cells){
+                            
+				//外周の上書き
+                            if(((0 < cntTest && cntTest < 13) || (182 < cntTest && cntTest < 195)) || ((cntTest % 14 == 0) && (cntTest != 0 && cntTest != 182)) || ((cntTest % 14 == 13) && (cntTest != 13 && cntTest != 195))){
+				cell.outsideChange();
+                            }else if((cntTest == 0 || cntTest == 13) || (cntTest == 182 || cntTest == 195)){
+                                cell.outsideClear();
+                            }
+                            cntTest += 1;
+			}
 			for(LifeCell cell : cells){
 				//世代交代(セルの塗り替え)
 				cell.generationalChange();
 			}
+                        
 		}
 	}
 }
