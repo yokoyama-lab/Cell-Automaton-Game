@@ -1,6 +1,6 @@
 # Cell-Automaton-Game
 
-MainPrograme 
+### MainPrograme 
    * CellPattern.java :(CAの例、無くていいかも)
    * Const.java       :(定数値を扱う)
    * GameFrame.java   :(フレーム、処理部分)
@@ -24,3 +24,6 @@ MainPrograme
 操作説明
  左クリック・・・右に回転
 ```
+
+### 引用元
+* [LifeGame](https://github.com/natmark/LifeGame)
