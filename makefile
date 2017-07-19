@@ -4,7 +4,7 @@
 JCC = javac
 JFLAGS = -g
 
-default: CellPattern.class Const.class GameFrame.class LifeCell.class LifeGame.class Range.class  
+default: CellPattern.class Const.class GameFrame.class LifeCell.class LifeGame.class Range.class Mycallback.java 
 
 
 
@@ -25,6 +25,9 @@ LifeGame.class: LifeGame.java
 
 Range.class: Range.java
 	      $(JCC) $(JFLAGS) Range.java
+
+Mycallback.class: Mycallback.java
+	      $(JCC) $(JFLAGS) Mycallback.java
 
 
 clean: 
