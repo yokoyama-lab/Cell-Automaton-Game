@@ -159,9 +159,9 @@ class LifeCell extends JButton{
 	 */
         
 
-	public void checkSurroundings(){
+	public int checkSurroundings(){
                 int cnt = 0, cnt1 = 0, cnt2 = 0, cnt3 = 0, cnt4 = 0, cnt5 = 0;
-                int cntall = 0;
+                int cntall = 0; int score = 0;
                 
 		for(LifeCell cell : surroundings){
 			if(cell.isLiving == 1) cnt1++;
@@ -180,7 +180,7 @@ class LifeCell extends JButton{
                             this.willLiving = (cntall % 4)+1;
                         }
                         
-			return;
+			return score;
                        
 		} else {
                     cnt = 0;
@@ -199,25 +199,30 @@ class LifeCell extends JButton{
 
                     if(cnt >= 2) {
                         this.willLiving = 0;
+                        score+=1;
                     }else if(cnt == 1){
                         if(isLiving == surroundings2[2-1][2].isLiving && 
                            ((surroundings2[2-1][2-1].isLiving == isLiving || surroundings2[2-2][2].isLiving == isLiving) || surroundings2[2-1][2+1].isLiving == isLiving))
-                            this.willLiving = 0; 
+                            { this.willLiving = 0;
+                                score+=1;} 
                         else if(isLiving == surroundings2[2][2-1].isLiving && 
                            ((surroundings2[2-1][2-1].isLiving == isLiving || surroundings2[2][2-2].isLiving == isLiving) || surroundings2[2+1][2-1].isLiving == isLiving))
-                            this.willLiving = 0; 
+                            { this.willLiving = 0;
+                                score+=1;} 
                         else if(isLiving == surroundings2[2][2+1].isLiving &&
                            ((surroundings2[2-1][2+1].isLiving == isLiving || surroundings2[2][2+2].isLiving == isLiving) || surroundings2[2+1][2+1].isLiving == isLiving))
-                            this.willLiving = 0;
+                            { this.willLiving = 0;
+                                score+=1;}
                         else if(isLiving == surroundings2[2+1][2].isLiving &&
                            ((surroundings2[2+1][2-1].isLiving == isLiving || surroundings2[2+1][2+1].isLiving == isLiving) || surroundings2[2+2][2].isLiving == isLiving) )
-                            this.willLiving = 0;
+                            { this.willLiving = 0;
+                                score+=1;}
                         else this.willLiving = isLiving;
                     }else{
                         //生存
                         this.willLiving = isLiving; 
                     }
-                    return;
+                    return score;
                 }
         }
 	

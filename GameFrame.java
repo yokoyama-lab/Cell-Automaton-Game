@@ -11,7 +11,7 @@ import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
+import javax.swing.JLabel;
 /**
  * ライフゲーム用のFrameクラス
  * @author Atsuya Sato
@@ -26,16 +26,19 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 	private ArrayList<LifeCell> cells;
 	//プリセットパターンを生成する際に使用。cellsを二次元配列にしたもの。
 	private LifeCell[][] cell_matrix;
+        private int score;
+        private JLabel tlPanel;
 	/**
 	 * Constructors
 	 */
 	public GameFrame(int width, int height){
 		super();
-
+                this.score=0;
 		this.width = width;
 		this.height = height;
 		setSize(width,height);	
 		cells = new ArrayList<LifeCell>();
+                tlPanel = new JLabel();
 	}
 	public GameFrame(String title){
 		super(title);
@@ -77,14 +80,19 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 		toolPanel.setLayout(null);
 		toolPanel.setBounds(0, p.getBounds().height, p.getBounds().width, 100);
 		toolPanel.setBackground(Color.white);
-		
+                //スコアのパネル生成
+		tlPanel.setText("スコア　"+this.score);
+		tlPanel.setBounds(0, p.getBounds().height+toolPanel.getBounds().height, p.getBounds().width, 30);
+
+		tlPanel.setOpaque(true);
+		tlPanel.setBackground(Color.black);		
 		//パネルへのボタン追加
 		addButtonsOnPanel(toolPanel);
 		
 		//フレームサイズの更新
 		int insets_height = insets.top + insets.bottom;
 		setResizable(true);
-		setSize(width + h_cell_cnt,height + insets_height + v_cell_cnt + toolPanel.getBounds().height);
+                setSize(width + h_cell_cnt,height + insets_height + v_cell_cnt + toolPanel.getBounds().height + tlPanel.getBounds().height);
 		setResizable(false);
 
 		cell_matrix = new LifeCell[v_cell_cnt][h_cell_cnt];
@@ -188,6 +196,7 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
                 
 		Container contentPane = getContentPane();
 		contentPane.add(p);
+                contentPane.add(tlPanel);
 		contentPane.add(toolPanel);
 	
         }
@@ -220,7 +229,7 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
                             running = !running;
 				JButton btn = (JButton)event.getSource();
 			
-					btn.setText("Run");								
+					btn.setText("スタート");								
 				
 			}
 		};
@@ -228,6 +237,8 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 			public void actionPerformed(ActionEvent event){
 				//盤面全てを初期化
 				LifeCell.forceKillAll(cells);
+                                score = 0;
+                                // tlPanel.setText("スコア　"+score);
 			}
 		};
 		ActionListener generateGliderBtnAction = new ActionListener(){
@@ -284,6 +295,7 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 	}
 	public void run(){
 		while(true){
+
 			//Startボタンが押されていない場合、処理を中断
 			while(!running){
 				try {
@@ -298,7 +310,7 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 			
 			for(LifeCell cell : cells){
 				//周囲のセルの状況を確認
-				cell.checkSurroundings();
+				score += cell.checkSurroundings();
 			}
                         int cntTest = 0;
                         
@@ -314,7 +326,9 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 			}
 			for(LifeCell cell : cells){
 				//世代交代(セルの塗り替え)
-				cell.generationalChange();
+			 cell.generationalChange();
+                /* ここでスコアの表示を更新しなければならない */
+		        tlPanel.setText("スコア　"+this.score);
 			}
                         
                 }
