@@ -2,13 +2,16 @@
  * プリセットとして提供するセルパターンをまとめたクラス
  * @author Atsuya Sato
  */
+import java.util.Random;
 public class CellPattern{
 	enum Pattern { GLIDER, SPACESHIP, GALAXY }
+ static  Random rnd=new Random();
+  static int r = rnd.nextInt(3)+1;
 	//グライダーパターン
 	private final static int[][] glider_ptn = {
-			{0,1,0},
-			{0,0,1},
-			{1,1,1}
+			{r,1,r},
+			{0,0,r},
+			{r,r,r}
 			};
 	//宇宙船パターン
 	private final static int[][] spaceship_ptn = {
@@ -19,7 +22,9 @@ public class CellPattern{
 			};
 	//銀河パターン
 	private final static int[][] galaxy_ptn = {
-            {1,2,3,4,1,2,3,4,1,2,3,2,1,4},
+
+ 
+            {1,2,3,4,1,2,3,4,1,2,3,2,1,2},
             {2,0,0,0,0,0,0,0,0,0,0,0,0,2},
             {4,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,3},
