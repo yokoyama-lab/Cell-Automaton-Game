@@ -263,36 +263,16 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
                                 gameoverFlag = false;
 			}
 		};
-		ActionListener generateGliderBtnAction = new ActionListener(){
-			public void actionPerformed(ActionEvent event){
-				//グライダーのパターン生成
-				CellPattern.patternGenerator(cell_matrix, CellPattern.Pattern.GLIDER);
-			}
-		};
-		ActionListener generateSpaceShipBtnAction = new ActionListener(){
-			public void actionPerformed(ActionEvent event){
-				//宇宙船のパターン生成
-				CellPattern.patternGenerator(cell_matrix, CellPattern.Pattern.SPACESHIP);
-			}
-		};
-		ActionListener generateGalaxyBtnAction = new ActionListener(){
-			public void actionPerformed(ActionEvent event){
-				//銀河のパターン生成
-				CellPattern.patternGenerator(cell_matrix, CellPattern.Pattern.GALAXY);
-			}
-		};
-
+	
                 //1コマ送りにしたい
 
 		ActionListener Run1BtnAction = new ActionListener(){
 			public void actionPerformed(ActionEvent event){
 				//動作状態を切り替え
-                            running = !running;
-				JButton btn = (JButton)event.getSource();
-				
-					btn.setText("一時実行");
-				
-				
+                         JButton btn = (JButton)event.getSource();
+                               if(running){
+                                    running = !running;
+                               }    	
 			}
 		};
 	
@@ -303,11 +283,8 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 		btnSources.put("スタート", RunBtnAction);
 		btnSources.put("リセット", ClearBtnAction);
 		//1コマ送りにしたい
-		btnSources.put("一時実行", Run1BtnAction);
-		btnSources.put("グライダー", generateGliderBtnAction);
-		btnSources.put("宇宙船", generateSpaceShipBtnAction);
-		btnSources.put("銀河", generateGalaxyBtnAction);
-              
+		btnSources.put("ストップ", Run1BtnAction);
+	
 		//ボタン生成
 		int i = 0;
 		for(Map.Entry<String, ActionListener>  btnSrc : btnSources.entrySet()){

@@ -80,15 +80,15 @@ public class CellPattern{
 				LifeCell cell = cells[Const.sponeLocation.height + y][Const.sponeLocation.width + x];
 				if(pattern[y][x] == 1){
 					cell.forceSpawn();
-				}else if(pattern[y][x] == 2){
-                                    cell.forceKill();
-                                }else if(pattern[y][x] == 3){
-                                    cell.forceKill1();
-                                }else if(pattern[y][x] == 4){
-                                    cell.forceKill2();
-                                }else {
-                                    cell.forceKill3();
-                                }
+				}//else if(pattern[y][x] == 2){
+                                 //   cell.forceKill();
+                                // }else if(pattern[y][x] == 3){
+                                //   cell.forceKill1();
+                                //  }else if(pattern[y][x] == 4){
+                                //    cell.forceKill2();
+                                //  }else {
+                                //   cell.forceKill3();
+                                //  }
 			}					
 		}			
 	}
