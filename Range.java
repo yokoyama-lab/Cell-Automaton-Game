@@ -2,6 +2,7 @@
  * Range用クラス(IntStreamが使いにくかったので)
  * @see http://d.hatena.ne.jp/torutk/20110924/p1
  */
+@SuppressWarnings("unchecked")
 public class Range<T extends Comparable> {
     public T lowerBound;
     public T upperBound;
