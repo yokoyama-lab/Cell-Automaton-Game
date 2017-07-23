@@ -90,13 +90,10 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 		tlPanel.setBounds(0, p.getBounds().height+toolPanel.getBounds().height, p.getBounds().width, 30);
 
 		tlPanel.setOpaque(true);
-<<<<<<< HEAD
+
 		tlPanel.setBackground(Color.black);
                 tlPanel.setForeground(Color.green);		
-=======
-		tlPanel.setBackground(Color.black);		
 
->>>>>>> ef253ffdf0569fda8c06fe4bde08896bfe37ebba
 		//パネルへのボタン追加
         addButtonsOnPanel(toolPanel);
                 
@@ -276,12 +273,11 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 		ActionListener Run1BtnAction = new ActionListener(){
 			public void actionPerformed(ActionEvent event){
 				//動作状態を切り替え
-                            running = !running;
 				JButton btn = (JButton)event.getSource();
-				
-					btn.setText("一時実行");
-				
-				
+                                if(running){
+                                    running = !running;
+		
+                                }				
 			}
 		};
 	
@@ -292,11 +288,8 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 		btnSources.put("スタート", RunBtnAction);
 		btnSources.put("リセット", ClearBtnAction);
 		//1コマ送りにしたい
-		btnSources.put("一時実行", Run1BtnAction);
-		btnSources.put("グライダー", generateGliderBtnAction);
-		btnSources.put("宇宙船", generateSpaceShipBtnAction);
-		btnSources.put("銀河", generateGalaxyBtnAction);
-              
+		btnSources.put("ストップ", Run1BtnAction);
+		              
 		//ボタン生成
 		int i = 0;
 		for(Map.Entry<String, ActionListener>  btnSrc : btnSources.entrySet()){
