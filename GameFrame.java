@@ -264,36 +264,11 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
                                 gameoverFlag = false;
 			}
 		};
-<<<<<<< HEAD
-			
-=======
-	
-                //1コマ送りにしたい
-
-		ActionListener Run1BtnAction = new ActionListener(){
-			public void actionPerformed(ActionEvent event){
-				//動作状態を切り替え
-
-				JButton btn = (JButton)event.getSource();
-                                if(running){
-                                    running = !running;
-		
-                                }				
-			}
-		};
-	
-		
->>>>>>> 9302e2a369e084454f071eb5b18b194d4faf94ed
 		
 		//格納順を保持したいため、LinkedHashMapを使用
 		LinkedHashMap<String,ActionListener> btnSources = new LinkedHashMap<String,ActionListener>();
 		btnSources.put("スタート", RunBtnAction);
 		btnSources.put("リセット", ClearBtnAction);
-<<<<<<< HEAD
-=======
-		//1コマ送りにしたい
-		btnSources.put("ストップ", Run1BtnAction);
->>>>>>> 9302e2a369e084454f071eb5b18b194d4faf94ed
 
 		//ボタン生成
 		int i = 0;
