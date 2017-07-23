@@ -264,47 +264,12 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
                                 gameoverFlag = false;
 			}
 		};
-		ActionListener generateGliderBtnAction = new ActionListener(){
-			public void actionPerformed(ActionEvent event){
-				//グライダーのパターン生成
-				CellPattern.patternGenerator(cell_matrix, CellPattern.Pattern.GLIDER);
-			}
-		};
-		ActionListener generateSpaceShipBtnAction = new ActionListener(){
-			public void actionPerformed(ActionEvent event){
-				//宇宙船のパターン生成
-				CellPattern.patternGenerator(cell_matrix, CellPattern.Pattern.SPACESHIP);
-			}
-		};
-		ActionListener generateGalaxyBtnAction = new ActionListener(){
-			public void actionPerformed(ActionEvent event){
-				//銀河のパターン生成
-				CellPattern.patternGenerator(cell_matrix, CellPattern.Pattern.GALAXY);
-			}
-		};
-
-                //1コマ送りにしたい
-
-		ActionListener Run1BtnAction = new ActionListener(){
-			public void actionPerformed(ActionEvent event){
-				//動作状態を切り替え
-				JButton btn = (JButton)event.getSource();
-                                if(running){
-                                    running = !running;
-		
-                                }				
-			}
-		};
-	
-		
 		
 		//格納順を保持したいため、LinkedHashMapを使用
 		LinkedHashMap<String,ActionListener> btnSources = new LinkedHashMap<String,ActionListener>();
 		btnSources.put("スタート", RunBtnAction);
 		btnSources.put("リセット", ClearBtnAction);
-		//1コマ送りにしたい
-		btnSources.put("ストップ", Run1BtnAction);
-		              
+
 		//ボタン生成
 		int i = 0;
 		for(Map.Entry<String, ActionListener>  btnSrc : btnSources.entrySet()){
