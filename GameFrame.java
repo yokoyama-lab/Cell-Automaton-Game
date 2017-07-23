@@ -21,28 +21,32 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 	private int height;
 	private int w_t;
 	private int h_t;
-  private int cellSize; 
+        private int cellSize; 
 	private boolean running = false;
-    private int run1 = 0;
+        private int run1 = 0;
 	//盤面に配置されたセルの配列
 	private ArrayList<LifeCell> cells;
 	//プリセットパターンを生成する際に使用。cellsを二次元配列にしたもの。
 	private LifeCell[][] cell_matrix;
-    private int score;
-    private JLabel tlPanel;
-
+        private int score;
+        private int cntl;
+        private boolean gameoverFlag = false; 
+        private JLabel tlPanel;
+        private JLabel tolPanel;
 	/**
 	 * Constructors
 	 */
 
 	public GameFrame(int width, int height){
 		super();
+                this.cntl = 0;
                 this.score=0;
 		this.width = width;
 		this.height = height;
 		setSize(width,height);	
 		cells = new ArrayList<LifeCell>();
         tlPanel = new JLabel();
+        tolPanel = new JLabel();
 	}
 	public GameFrame(String title){
 		super(title);
@@ -85,13 +89,20 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 		toolPanel.setLayout(null);
 		toolPanel.setBounds(0, p.getBounds().height, p.getBounds().width, 100);
 		toolPanel.setBackground(Color.white);
-
+                //スコア表示
 		tlPanel.setText("スコア　"+this.score);
 		tlPanel.setBounds(0, p.getBounds().height+toolPanel.getBounds().height, p.getBounds().width, 30);
         this.h_t = p.getBounds().height+toolPanel.getBounds().height;
         this.w_t = p.getBounds().width;
 		tlPanel.setOpaque(true);
 		tlPanel.setBackground(Color.blue);
+                //セル残の表示
+	tolPanel.setText("セルの数　"+this.cntl  + "/120");
+        tolPanel.setBounds(0, p.getBounds().height+toolPanel.getBounds().height+tlPanel.getBounds().height, p.getBounds().width, 30);
+        this.h_t = p.getBounds().height+toolPanel.getBounds().height;
+        this.w_t = p.getBounds().width;
+		tolPanel.setOpaque(true);
+		tolPanel.setBackground(Color.green);
 		//パネルへのボタン追加
         addButtonsOnPanel(toolPanel);
                 
@@ -99,7 +110,7 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 		//フレームサイズの更新
 		int insets_height = insets.top + insets.bottom;
 		setResizable(true);
-		setSize(width + h_cell_cnt,height + insets_height + v_cell_cnt + toolPanel.getBounds().height + tlPanel.getBounds().height);
+		setSize(width + h_cell_cnt,height + insets_height + v_cell_cnt + toolPanel.getBounds().height + tlPanel.getBounds().height + tolPanel.getBounds().height);
 		setResizable(false);
 
 		cell_matrix = new LifeCell[v_cell_cnt][h_cell_cnt];
@@ -204,6 +215,7 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 		Container contentPane = getContentPane();
 		contentPane.add(p);
                 contentPane.add(tlPanel);
+                contentPane.add(tolPanel);
 		contentPane.add(toolPanel);
 	
         }
@@ -213,7 +225,7 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
             int v_cell_cnt = height / cellSize; 
             //横の総セル数
             int h_cell_cnt = width / cellSize;
-            if((x != 0 && y != 0) && (x < h_cell_cnt - 2 && y < v_cell_cnt - 2)){
+            if((x != 0 && y != 0) && (x < h_cell_cnt - 2 && y < v_cell_cnt - 2) && gameoverFlag == false){
                 int temp = cell_matrix[y][x].isLiving;
                 cell_matrix[y][x].isLiving = cell_matrix[y + 1][x].isLiving;
                 cell_matrix[y + 1][x].isLiving = cell_matrix[y + 1][x + 1].isLiving;
@@ -247,6 +259,8 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 				//盤面全てを初期化
 				LifeCell.forceKillAll(cells);
                                 score = 0;
+                                cntl = 0;
+                                gameoverFlag = false;
 			}
 		};
 		ActionListener generateGliderBtnAction = new ActionListener(){
@@ -323,28 +337,47 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 				Thread.sleep(Const.SLEEP_TIME_MS);
 			} catch (InterruptedException e) {	e.printStackTrace(); }
 			
-			for(LifeCell cell : cells){
-				//周囲のセルの状況を確認
+                        // セルの数が一定数達すと一時停止  
+                        if(this.gameoverFlag){ 
+                            tolPanel.setText("Gameover　");
+                            tlPanel.setText("スコア　"+this.score); 
+                        }else{
+                            for(LifeCell cell : cells){
+				//周囲のセルの状況を確認 
 				score += cell.checkSurroundings();
-			}
-                        int cntTest = 0;
-                        
-                        for(LifeCell cell : cells){
+	                       
+                            }
+                            int cntTest = 0;
+
+                            for(LifeCell cell : cells){
                             
 				//外周の上書き
-                            if(((0 < cntTest && cntTest < 13) || (182 < cntTest && cntTest < 195)) || ((cntTest % 14 == 0) && (cntTest != 0 && cntTest != 182)) || ((cntTest % 14 == 13) && (cntTest != 13 && cntTest != 195))){
-				cell.outsideChange();
-                            }else if((cntTest == 0 || cntTest == 13) || (cntTest == 182 || cntTest == 195)){
-                                cell.outsideClear();
+                                if(((0 < cntTest && cntTest < 13) || (182 < cntTest && cntTest < 195)) || ((cntTest % 14 == 0) && (cntTest != 0 && cntTest != 182)) || ((cntTest % 14 == 13) && (cntTest != 13 && cntTest != 195))){
+                                    cell.outsideChange();
+                                }else if((cntTest == 0 || cntTest == 13) || (cntTest == 182 || cntTest == 195)){
+                                    cell.outsideClear();
+                                }
+                                cntTest += 1;
                             }
-                            cntTest += 1;
-			}
-			for(LifeCell cell : cells){
+
+                            this.cntl = 0;
+                            for(LifeCell cell : cells){
 				//世代交代(セルの塗り替え)
-				cell.generationalChange();
-                /* ここでスコアの表示を更新しなければならない */
-		        tlPanel.setText("スコア　"+this.score);
-			}
+                                cell.generationalChange(); 
+                                if(cell.isLiving > 0){
+                                this.cntl++;
+                                }                           
+                                
+                                /* ここでスコア,セルの数の表示を更新しなければならない */
+                                tlPanel.setText("スコア　"+this.score);
+                                tolPanel.setText("セルの数　"+this.cntl + "/120"); 
+                                
+                            }   
+                            tolPanel.setText("セルの数　"+this.cntl + "/120");
+                            if(this.cntl >= 120){
+                                this.gameoverFlag = true;
+                            }
+                        }
 		}
 	}
 }
