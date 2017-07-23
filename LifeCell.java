@@ -3,6 +3,7 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.JButton;
 
@@ -14,9 +15,11 @@ class LifeCell extends JButton{
 	//周囲のセル
 	private ArrayList<LifeCell> surroundings;
 	//現在の生存フラグ
-	private int isLiving = 0;
+	public int isLiving = 0;
+        private int cellX, cellY;
 	//世代更新後の生存フラグ
 	private int willLiving = 0;
+        private Mycallback callback; 
         private LifeCell surroundings2[][] = {
             {null,null,null,null,null},
             {null,null,null,null,null},
@@ -25,36 +28,37 @@ class LifeCell extends JButton{
             {null,null,null,null,null}
         };
         private ArrayList<LifeCell> surroundings3;
-	/**
+        /**
 	 * Constructors
 	 */
 	public LifeCell(){
 		super("");
 		surroundings = new ArrayList<LifeCell>();
                 surroundings2 = new LifeCell[5][5];
-                /*for (int i = 0; i < 5; i++) {
-                    for (int s = 0; s < 5; s++){
-                        surroundings2[i][s] = 0;
-                    }
-                }*/
                 surroundings3 = new ArrayList<LifeCell>();
+                cellX = 0;
+                cellY = 0;
 		setLayout();
 	}
-
-	public LifeCell(Rectangle rect) {
+        public LifeCell(Rectangle rect,int x, int y) {
 		super("");
 		this.setBounds(rect);
 		surroundings = new ArrayList<LifeCell>();
                 //surroundings2 = new ArrayList<LifeCell>();
                 surroundings2 = new LifeCell[5][5];
-                /*for (int i = 0; i < 5; i++) {
-                    for (int s = 0; s < 5; s++){
-                        surroundings2[i][s] = 0;
-                    }
-                    }*/
+                cellX = x;
+                cellY = y;
                 surroundings3 = new ArrayList<LifeCell>();
 		setLayout();
 	}
+        //callbackの中身をセット
+        public void setCallback(Mycallback callback){
+            this.callback = callback;
+        }
+        
+        public int getisLiving(){
+            return isLiving;
+        }
 	/**
 	 * レイアウトの設定
 	 */
@@ -70,11 +74,19 @@ class LifeCell extends JButton{
 		this.addActionListener(
 				new ActionListener(){
 						public void actionPerformed(ActionEvent event){
+                                                    
+                                                    callback.spinCells(cellX, cellY);
+                                                    /*
  							if(button.isLiving==1){
-								button.forceKill();
+                                                            button.forceKill();
 							}else if(button.isLiving==2){
-                                                            button.forceKill1();}else if(button.isLiving==3){button.forceKill2();}else{								button.forceSpawn();
+                                                            button.forceKill1();
+                                                        }else if(button.isLiving==3){
+                                                            button.forceKill2();
+                                                        }else{
+                                                            button.forceSpawn();
 							}
+                                                    */
 						}
 					}
 				);
@@ -128,15 +140,31 @@ class LifeCell extends JButton{
                 }
 
                 else{
-                    setBackground(Color.white);			
+                    setBackground(Color.white);
                 }
+
+        }
+	/**
+	 * 外周の上書き
+	 */
+        public void outsideChange(){
+                Random rnd = new Random();
+		willLiving = rnd.nextInt(4) + 1;
+        }
+        public void outsideClear(){
+		willLiving = 0;
         }
 	/**
 	 * 周りのセルを調べて、世代交代の準備
-	 */
-	public void checkSurroundings(){
+    public class Score extends checkSurroundings{
+        private int s = 0;
+      return  s+=1;
+    }
+        */
+	public int checkSurroundings(){
                 int cnt = 0, cnt1 = 0, cnt2 = 0, cnt3 = 0, cnt4 = 0, cnt5 = 0;
-                int cntall = 0;
+                int cntall = 0; int score = 0;
+
                 
 		for(LifeCell cell : surroundings){
 			if(cell.isLiving == 1) cnt1++;
@@ -155,7 +183,7 @@ class LifeCell extends JButton{
                             this.willLiving = (cntall % 4)+1;
                         }
                         
-			return;
+			return score;
                        
 		} else {
                     cnt = 0;
@@ -174,39 +202,69 @@ class LifeCell extends JButton{
 
                     if(cnt >= 2) {
                         this.willLiving = 0;
+                        score+=1;
                     }else if(cnt == 1){
                         if(isLiving == surroundings2[2-1][2].isLiving && 
                            ((surroundings2[2-1][2-1].isLiving == isLiving || surroundings2[2-2][2].isLiving == isLiving) || surroundings2[2-1][2+1].isLiving == isLiving))
-                            this.willLiving = 0; 
+                            { this.willLiving = 0;
+                                score+=1;} 
                         else if(isLiving == surroundings2[2][2-1].isLiving && 
                            ((surroundings2[2-1][2-1].isLiving == isLiving || surroundings2[2][2-2].isLiving == isLiving) || surroundings2[2+1][2-1].isLiving == isLiving))
-                            this.willLiving = 0; 
+                            { this.willLiving = 0;
+                                score+=1;} 
                         else if(isLiving == surroundings2[2][2+1].isLiving &&
                            ((surroundings2[2-1][2+1].isLiving == isLiving || surroundings2[2][2+2].isLiving == isLiving) || surroundings2[2+1][2+1].isLiving == isLiving))
-                            this.willLiving = 0;
+                            { this.willLiving = 0;
+                                score+=1;}
                         else if(isLiving == surroundings2[2+1][2].isLiving &&
                            ((surroundings2[2+1][2-1].isLiving == isLiving || surroundings2[2+1][2+1].isLiving == isLiving) || surroundings2[2+2][2].isLiving == isLiving) )
-                            this.willLiving = 0;
+                            { this.willLiving = 0;
+
+                                score+=1;}
                         else this.willLiving = isLiving;
                     }else{
                         //生存
                         this.willLiving = isLiving; 
                     }
-                    return;
+                    return score;
                 }
         }
 	
+        //色の変更
+        public void forceSpawn(){
+            switch(isLiving){
+            case 0:
+                this.setBackground(Color.white);
+                break;
+            case 1:
+		this.setBackground(Color.yellow);
+                break;
+            case 2:
+                this.setBackground(Color.red);
+                break;
+            case 3:
+		this.setBackground(Color.green);
+                break;
+            case 4:
+                this.setBackground(Color.blue);
+                break;
+            }
+	}
+
 	/**
 	 * ボタンを押して生成する場合
 	 */
+        /*
 	public void forceSpawn(){
                 isLiving = 1;
 		this.setBackground(Color.yellow);
           
 	}
+        */
 	/**
 	 * ボタンを押してセルを消す場合
 	 */
+        /*
 	public void forceKill(){
 		isLiving = 2;
 		this.setBackground(Color.red);
@@ -223,6 +281,7 @@ class LifeCell extends JButton{
 		isLiving = 0;
 		this.setBackground(Color.white);
 	}
+        */
 	/**
 	 * 盤面初期化用
 	 */
@@ -230,7 +289,8 @@ class LifeCell extends JButton{
 		for(LifeCell cell : cells){
 			cell.isLiving = 0;
 			cell.willLiving = 0;
-			cell.setBackground(Color.white);			
+			cell.setBackground(Color.white);
+			
 		}
 	}
 }
