@@ -45,9 +45,10 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 		this.height = height;
 		setSize(width,height);	
 		cells = new ArrayList<LifeCell>();
-        tlPanel = new JLabel();
-        tolPanel = new JLabel();
-	}
+
+                tlPanel = new JLabel();
+                tolPanel = new JLabel();
+        }
 	public GameFrame(String title){
 		super(title);
 		cells = new ArrayList<LifeCell>();
@@ -89,22 +90,26 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 		toolPanel.setLayout(null);
 		toolPanel.setBounds(0, p.getBounds().height, p.getBounds().width, 100);
 		toolPanel.setBackground(Color.white);
+
                 //スコア表示
 		tlPanel.setText("スコア　"+this.score);
 		tlPanel.setBounds(0, p.getBounds().height+toolPanel.getBounds().height, p.getBounds().width, 30);
-        this.h_t = p.getBounds().height+toolPanel.getBounds().height;
-        this.w_t = p.getBounds().width;
+
 		tlPanel.setOpaque(true);
-		tlPanel.setBackground(Color.blue);
+
+		tlPanel.setBackground(Color.black);
+                tlPanel.setForeground(Color.green);		
+
                 //セル残の表示
-	tolPanel.setText("セルの数　"+this.cntl  + "/120");
-        tolPanel.setBounds(0, p.getBounds().height+toolPanel.getBounds().height+tlPanel.getBounds().height, p.getBounds().width, 30);
-        this.h_t = p.getBounds().height+toolPanel.getBounds().height;
-        this.w_t = p.getBounds().width;
+                tolPanel.setText("セルの数　"+this.cntl  + "/120");
+                tolPanel.setBounds(0, p.getBounds().height+toolPanel.getBounds().height+tlPanel.getBounds().height, p.getBounds().width, 30);
+                this.h_t = p.getBounds().height+toolPanel.getBounds().height;
+                this.w_t = p.getBounds().width;
 		tolPanel.setOpaque(true);
-		tolPanel.setBackground(Color.green);
+		tolPanel.setBackground(Color.black);
+                tolPanel.setForeground(Color.green);
 		//パネルへのボタン追加
-        addButtonsOnPanel(toolPanel);
+                addButtonsOnPanel(toolPanel);
                 
 		
 		//フレームサイズの更新
@@ -247,11 +252,7 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 				//動作状態を切り替え
                             running = !running;
 				JButton btn = (JButton)event.getSource();
-				if(running){
-					  btn.setText("ストップ");
-				}else{ 
-					btn.setText("スタート");								
-				}
+			  btn.setText("スタート");
 			}
 		};
 		ActionListener ClearBtnAction = new ActionListener(){
@@ -269,10 +270,12 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 		ActionListener Run1BtnAction = new ActionListener(){
 			public void actionPerformed(ActionEvent event){
 				//動作状態を切り替え
-                         JButton btn = (JButton)event.getSource();
-                               if(running){
+
+				JButton btn = (JButton)event.getSource();
+                                if(running){
                                     running = !running;
-                               }    	
+		
+                                }				
 			}
 		};
 	
@@ -284,7 +287,7 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 		btnSources.put("リセット", ClearBtnAction);
 		//1コマ送りにしたい
 		btnSources.put("ストップ", Run1BtnAction);
-	
+
 		//ボタン生成
 		int i = 0;
 		for(Map.Entry<String, ActionListener>  btnSrc : btnSources.entrySet()){
@@ -293,6 +296,7 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 			
 			JButton button = new JButton(btnSrc.getKey());
 			button.setBackground(Color.black);
+                        button.setForeground(Color.blue);
 			button.setBounds(10 + i * 80,panel.getBounds().y, 80, 50);
 			button.addActionListener(btnSrc.getValue());
 			panel.add(button);						
@@ -302,6 +306,7 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 	public void run(){
 //        tlPanel.setBounds(0, this.h_t,this.w_t, 30);
 		while(true){
+
 			//Startボタンが押されていない場合、処理を中断
 			while(!running){
 				try {
@@ -340,6 +345,7 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
                             this.cntl = 0;
                             for(LifeCell cell : cells){
 				//世代交代(セルの塗り替え)
+
                                 cell.generationalChange(); 
                                 if(cell.isLiving > 0){
                                 this.cntl++;
@@ -351,7 +357,7 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
                                 
                             }   
                             tolPanel.setText("セルの数　"+this.cntl + "/120");
-                            if(this.cntl >= 120){
+                            if(this.cntl > 120){
                                 this.gameoverFlag = true;
                             }
                         }
