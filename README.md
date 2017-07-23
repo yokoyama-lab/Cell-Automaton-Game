@@ -11,6 +11,7 @@
    * LifeCell.java    :(セルのクラス、遷移規則)
    * LifeGame.java    :(メインクラス)
    * Range.java       :()
+   * Mycallback.java  :(回転) 
 
 ### 起動準備
   * Githubから本プログラムをダウンロード
