@@ -5,13 +5,14 @@
 ======================================================================　
 
 ### MainPrograme 
-   * CellPattern.java :(CAの例、無くていいかも)
-   * Const.java       :(定数値を扱う)
-   * GameFrame.java   :(フレーム、処理部分)
-   * LifeCell.java    :(セルのクラス、遷移規則)
-   * LifeGame.java    :(メインクラス)
-   * Range.java       :()
-   * Mycallback.java  :(回転) 
+   * CellPattern.java　:(CAの例，今回は扱っていない)
+   * Const.java        :(定数値を扱う)
+   * GameFrame.java    :(フレーム、ボタン等の処理部分)
+   * LifeCell.java     :(セルのクラス、遷移規則)
+   * LifeGame.java     :(メインクラス)
+   * Range.java        :(縦横比)
+   * Mycallback.java   :(クリックした際回転する) 
+   * makefile          :(上記のファイルを同時にコンパイルする) 
 
 ### 起動準備
   * Githubから本プログラムをダウンロード
