@@ -231,15 +231,24 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
             //横の総セル数
             int h_cell_cnt = width / cellSize;
             if((x != 0 && y != 0) && (x < h_cell_cnt - 2 && y < v_cell_cnt - 2) && gameoverFlag == false){
-                int temp = cell_matrix[y][x].isLiving;
-                cell_matrix[y][x].isLiving = cell_matrix[y + 1][x].isLiving;
-                cell_matrix[y + 1][x].isLiving = cell_matrix[y + 1][x + 1].isLiving;
-                cell_matrix[y + 1][x + 1].isLiving = cell_matrix[y][x + 1].isLiving;
-                cell_matrix[y][x + 1].isLiving = temp;
-                cell_matrix[y][x].forceSpawn();
-                cell_matrix[y + 1][x].forceSpawn();
-                cell_matrix[y][x + 1].forceSpawn();
-                cell_matrix[y + 1][x + 1].forceSpawn();
+                // 2×2ブロックが全て死亡状態のときはクリックセルを状態1に
+                if(cell_matrix[y][x].isLiving == 0 &&
+                   cell_matrix[y+1][x].isLiving == 0 &&
+                   cell_matrix[y][x+1].isLiving == 0 &&
+                   cell_matrix[y+1][x+1].isLiving == 0){
+                    cell_matrix[y][x].isLiving = 1;
+                    cell_matrix[y][x].forceSpawn();
+                } else {
+                    int temp = cell_matrix[y][x].isLiving;
+                    cell_matrix[y][x].isLiving = cell_matrix[y + 1][x].isLiving;
+                    cell_matrix[y + 1][x].isLiving = cell_matrix[y + 1][x + 1].isLiving;
+                    cell_matrix[y + 1][x + 1].isLiving = cell_matrix[y][x + 1].isLiving;
+                    cell_matrix[y][x + 1].isLiving = temp;
+                    cell_matrix[y][x].forceSpawn();
+                    cell_matrix[y + 1][x].forceSpawn();
+                    cell_matrix[y][x + 1].forceSpawn();
+                    cell_matrix[y + 1][x + 1].forceSpawn();
+                }
             }
         }   
 	/**
@@ -278,8 +287,8 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 			
 			JButton button = new JButton(btnSrc.getKey());
 			button.setBackground(Color.black);
-                        button.setForeground(Color.blue);
-			button.setBounds(10 + i * 80,panel.getBounds().y, 80, 50);
+                        button.setForeground(Color.white);
+			button.setBounds(10 + i * 100,panel.getBounds().y, 100, 50);
 			button.addActionListener(btnSrc.getValue());
 			panel.add(button);						
 			i++;

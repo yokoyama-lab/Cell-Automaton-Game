@@ -1,5 +1,14 @@
 # Compiled class file
 *.class
+bin/
+test/classes/
+
+# Editor backup files
+*.java~
+*~
+
+# JUnit jar
+lib/
 
 # Log file
 *.log
