@@ -18,10 +18,10 @@ default:
 test:
 	$(JCC) $(JFLAGS) -cp $(LIB) -d test/classes \
 	    $(SRC)/Range.java $(SRC)/Const.java $(SRC)/Mycallback.java $(SRC)/LifeCell.java \
-	    test/RangeTest.java test/LifeCellTest.java
+	    test/*.java
 	java -Djava.awt.headless=true -jar $(LIB) \
 	    --class-path test/classes \
-	    --select-class RangeTest --select-class LifeCellTest
+	    --scan-classpath
 
 run:
 	java -cp $(BIN) LifeGame

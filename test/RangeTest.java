@@ -36,4 +36,21 @@ class RangeTest {
         assertTrue(range.includes("b"));
         assertFalse(range.includes("d"));
     }
+
+    @Test
+    void includes_lowerAndUpperBoundsAreInclusive() {
+        Range<Integer> range = new Range<>(0, 10);
+        assertTrue(range.includes(0), "下限は含む");
+        assertTrue(range.includes(10), "上限は含む");
+        assertFalse(range.includes(-1));
+        assertFalse(range.includes(11));
+    }
+
+    @Test
+    void includes_invertedBounds_neverIncludes() {
+        // 下限 > 上限 の場合は常に空区間扱い
+        Range<Integer> range = new Range<>(3, 2);
+        assertFalse(range.includes(2));
+        assertFalse(range.includes(3));
+    }
 }
