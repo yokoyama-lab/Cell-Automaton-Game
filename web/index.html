@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cell-Automaton-Game</title>
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: #111;
+      color: #eee;
+      font-family: system-ui, "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+    }
+    h1 { font-size: 20px; margin: 8px 0 0; font-weight: 600; }
+    #board {
+      background: #000;
+      image-rendering: pixelated;
+      border: 1px solid #333;
+      cursor: pointer;
+      width: 518px;
+      max-width: 92vw;
+      height: auto;
+    }
+    #statusTop { color: #34c759; font-size: 16px; font-variant-numeric: tabular-nums; }
+    #statusBottom { color: #34c759; font-size: 16px; min-height: 20px; font-variant-numeric: tabular-nums; }
+    .controls { display: flex; gap: 8px; }
+    button {
+      background: #000;
+      color: #fff;
+      border: 1px solid #555;
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    button:hover { background: #222; }
+    .help { color: #888; font-size: 12px; max-width: 518px; text-align: center; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <h1>Cell-Automaton-Game</h1>
+  <div id="statusTop">スコア 0　最高 0　Lv.1</div>
+  <canvas id="board"></canvas>
+  <div id="statusBottom">セルの数 0/120</div>
+  <div class="controls">
+    <button id="startBtn">スタート</button>
+    <button id="resetBtn">リセット</button>
+    <button id="colorBtn">色：黄</button>
+  </div>
+  <p class="help">
+    空の 2×2 を左クリックで選択色を配置／生存セルがある 2×2 はクリックで時計回りに回転。<br>
+    同時に多く消すほどコンボ倍率（最大 ×5）。スコアでレベルが上がり更新が速くなる。<br>
+    キーボード：Space＝開始/停止、R＝リセット。
+  </p>
+  <script src="game.js"></script>
+</body>
+</html>

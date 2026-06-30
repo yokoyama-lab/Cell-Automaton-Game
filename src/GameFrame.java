@@ -4,6 +4,10 @@ import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -30,7 +34,13 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 	private LifeCell[][] cell_matrix;
         private int score;
         private int cntl;
-        private boolean gameoverFlag = false; 
+        private boolean gameoverFlag = false;
+        //難易度進行・スコア演出用の状態
+        private int level = 1;
+        private int highScore = 0;
+        private int comboMult = 1;
+        //配置するセルの色（状態1〜4）。色ボタンで切り替える。
+        private int placeColor = 1;
         private JLabel tlPanel;
         private JLabel tolPanel;
 	/**
@@ -41,6 +51,7 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 		super();
                 this.cntl = 0;
                 this.score=0;
+                this.highScore = loadHighScore();
 		this.width = width;
 		this.height = height;
 		setSize(width,height);	
@@ -92,7 +103,7 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 		toolPanel.setBackground(Color.white);
 
                 //スコア表示
-		tlPanel.setText("スコア　"+this.score);
+		tlPanel.setText("スコア　"+this.score+"　最高　"+this.highScore+"　Lv."+this.level);
 		tlPanel.setBounds(0, p.getBounds().height+toolPanel.getBounds().height, p.getBounds().width, 30);
 
 		tlPanel.setOpaque(true);
@@ -101,7 +112,7 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
                 tlPanel.setForeground(Color.green);		
 
                 //セル残の表示
-                tolPanel.setText("セルの数　"+this.cntl  + "/120");
+                tolPanel.setText("セルの数　"+this.cntl  + "/" + Const.GAMEOVER_LIMIT);
                 tolPanel.setBounds(0, p.getBounds().height+toolPanel.getBounds().height+tlPanel.getBounds().height, p.getBounds().width, 30);
                 this.h_t = p.getBounds().height+toolPanel.getBounds().height;
                 this.w_t = p.getBounds().width;
@@ -236,7 +247,7 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
                    cell_matrix[y+1][x].isLiving == 0 &&
                    cell_matrix[y][x+1].isLiving == 0 &&
                    cell_matrix[y+1][x+1].isLiving == 0){
-                    cell_matrix[y][x].isLiving = 1;
+                    cell_matrix[y][x].isLiving = placeColor;
                     cell_matrix[y][x].forceSpawn();
                 } else {
                     int temp = cell_matrix[y][x].isLiving;
@@ -258,26 +269,39 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 		//ボタンのアクションリスナー作成
 		ActionListener RunBtnAction = new ActionListener(){
 			public void actionPerformed(ActionEvent event){
-				//動作状態を切り替え
+				//動作状態を切り替え（ラベルも実状態に合わせる）
                             running = !running;
 				JButton btn = (JButton)event.getSource();
-			  btn.setText("スタート");
+			  btn.setText(running ? "ストップ" : "スタート");
 			}
 		};
 		ActionListener ClearBtnAction = new ActionListener(){
 			public void actionPerformed(ActionEvent event){
-				//盤面全てを初期化
+				//盤面全てを初期化（リスタート）
 				LifeCell.forceKillAll(cells);
                                 score = 0;
                                 cntl = 0;
+                                level = 1;
+                                comboMult = 1;
                                 gameoverFlag = false;
+                                tlPanel.setText("スコア　"+score+"　最高　"+highScore+"　Lv."+level);
+                                tolPanel.setText("セルの数　"+cntl+"/"+Const.GAMEOVER_LIMIT);
 			}
 		};
-		
+		//配置するセルの色を切り替える
+		ActionListener ColorBtnAction = new ActionListener(){
+			public void actionPerformed(ActionEvent event){
+                            placeColor = (placeColor % 4) + 1;
+                            JButton btn = (JButton)event.getSource();
+                            btn.setText("色："+colorName(placeColor));
+			}
+		};
+
 		//格納順を保持したいため、LinkedHashMapを使用
 		LinkedHashMap<String,ActionListener> btnSources = new LinkedHashMap<String,ActionListener>();
 		btnSources.put("スタート", RunBtnAction);
 		btnSources.put("リセット", ClearBtnAction);
+		btnSources.put("色："+colorName(placeColor), ColorBtnAction);
 
 		//ボタン生成
 		int i = 0;
@@ -294,6 +318,42 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 			i++;
 		}
 	}
+	//配置色（状態1〜4）の表示名
+	private String colorName(int c){
+	    switch(c){
+	        case 1:  return "黄";
+	        case 2:  return "赤";
+	        case 3:  return "緑";
+	        case 4:  return "青";
+	        default: return "?";
+	    }
+	}
+	//現在のレベルに応じた更新間隔（下限あり）
+	private long currentSleepMs(){
+	    long ms = Const.SLEEP_TIME_MS - (long)(this.level - 1) * Const.SLEEP_STEP_MS;
+	    return Math.max(Const.MIN_SLEEP_TIME_MS, ms);
+	}
+	//ハイスコアの読み込み（無ければ0）
+	private int loadHighScore(){
+	    try {
+	        Path p = Paths.get(System.getProperty("user.home"), Const.HIGHSCORE_FILE);
+	        if(Files.exists(p)){
+	            return Integer.parseInt(Files.readString(p).trim());
+	        }
+	    } catch (IOException | NumberFormatException e) {
+	        //読めない/壊れている場合は0扱い
+	    }
+	    return 0;
+	}
+	//ハイスコアの保存
+	private void saveHighScore(int value){
+	    try {
+	        Path p = Paths.get(System.getProperty("user.home"), Const.HIGHSCORE_FILE);
+	        Files.writeString(p, Integer.toString(value));
+	    } catch (IOException e) {
+	        //保存失敗は致命的ではないので無視
+	    }
+	}
 	public void run(){
 //        tlPanel.setBounds(0, this.h_t,this.w_t, 30);
 		while(true){
@@ -301,25 +361,35 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
 			//Startボタンが押されていない場合、処理を中断
 			while(!running){
 				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {	e.printStackTrace(); } 
+					Thread.sleep(100);
+				} catch (InterruptedException e) {	e.printStackTrace(); }
 			}
-			
+
 			try {
-				//更新速度
-				Thread.sleep(Const.SLEEP_TIME_MS);
+				//更新速度（レベルが上がるほど速くなる）
+				Thread.sleep(currentSleepMs());
 			} catch (InterruptedException e) {	e.printStackTrace(); }
-			
-                        // セルの数が一定数達すと一時停止  
-                        if(this.gameoverFlag){ 
-                            tolPanel.setText("Gameover　");
-                            tlPanel.setText("スコア　"+this.score); 
+
+                        // セルの数が一定数達すと一時停止
+                        if(this.gameoverFlag){
+                            tolPanel.setText("GAME OVER　スコア "+this.score+" / 最高 "+this.highScore+"　（リセットで再挑戦）");
+                            tlPanel.setText("スコア　"+this.score+"　最高　"+this.highScore+"　Lv."+this.level);
                         }else{
+                            //この世代で消えたセル数を集計し、同時消しほど高いコンボ倍率を掛ける
+                            int killsThisGen = 0;
                             for(LifeCell cell : cells){
-				//周囲のセルの状況を確認 
-				score += cell.checkSurroundings();
-	                       
+				//周囲のセルの状況を確認
+				killsThisGen += cell.checkSurroundings();
+
                             }
+                            if(killsThisGen > 0){
+                                this.comboMult = Math.min(killsThisGen, Const.MAX_COMBO_MULT);
+                                this.score += killsThisGen * this.comboMult;
+                            }else{
+                                this.comboMult = 1;
+                            }
+                            //スコアに応じてレベル（難易度）が上がる
+                            this.level = 1 + this.score / Const.SCORE_PER_LEVEL;
                             int cntTest = 0;
 
                             for(LifeCell cell : cells){
@@ -337,19 +407,22 @@ public class GameFrame extends JFrame implements Runnable, Mycallback{
                             for(LifeCell cell : cells){
 				//世代交代(セルの塗り替え)
 
-                                cell.generationalChange(); 
+                                cell.generationalChange();
                                 if(cell.isLiving > 0){
                                 this.cntl++;
-                                }                           
-                                
-                                /* ここでスコア,セルの数の表示を更新しなければならない */
-                                tlPanel.setText("スコア　"+this.score);
-                                tolPanel.setText("セルの数　"+this.cntl + "/120"); 
-                                
-                            }   
-                            tolPanel.setText("セルの数　"+this.cntl + "/120");
-                            if(this.cntl > 120){
+                                }
+                            }
+                            //スコア・セル数・レベル・コンボの表示を更新
+                            tlPanel.setText("スコア　"+this.score+"　最高　"+this.highScore+"　Lv."+this.level);
+                            String comboText = (this.comboMult > 1) ? "　コンボ x"+this.comboMult : "";
+                            tolPanel.setText("セルの数　"+this.cntl + "/" + Const.GAMEOVER_LIMIT + comboText);
+                            if(this.cntl > Const.GAMEOVER_LIMIT){
                                 this.gameoverFlag = true;
+                                //ハイスコア更新の判定と保存
+                                if(this.score > this.highScore){
+                                    this.highScore = this.score;
+                                    saveHighScore(this.highScore);
+                                }
                             }
                         }
 		}
